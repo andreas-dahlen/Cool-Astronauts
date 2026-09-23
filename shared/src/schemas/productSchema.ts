@@ -1,4 +1,5 @@
 import * as z from "zod"
+import { idSchema } from './userSchema.ts'
 
 export const productSchema = z.object({
   name: z.string(),
@@ -7,11 +8,8 @@ export const productSchema = z.object({
   amountInStock: z.number().int().min(0)
 }).strict()
 
-export const productIdSchema = z.object({
-  productId: z.number().int().min(0)
-}).strict()
-
-
-export const combinedProductSchema = productSchema.extend(productIdSchema.shape)
+export const combinedProductSchema = productSchema.extend({
+  productId: idSchema
+})
 
 export const combinedProductsArraySchema = z.array(combinedProductSchema)
