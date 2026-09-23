@@ -12,10 +12,11 @@
     "cool": "npm run build && npm run start"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "@project/shared": "file:../shared"
+    "@project/shared": "file:../shared",
+    "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
     "supertest": "^7.3.0",
     "typescript": "^7.0.2",

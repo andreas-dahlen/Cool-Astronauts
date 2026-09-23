@@ -43,6 +43,7 @@
     "skipLibCheck": true,
 
 
-    "exclude": [ "**/test" ]
-  }
+  },
+  "include": [ "src" ],
+  "exclude": [ "**/test" ]
 }
