@@ -1,16 +1,18 @@
 import type { cartSchema } from './schemas/cartSchema.ts';
-import type { combinedProductsArraySchema, combinedProductSchema, productIdSchema } from './schemas/productSchema.ts';
-import type { combinedUserSchema, userIdSchema, userSchema } from './schemas/userSchema.ts';
+import { combinedProductsArraySchema, combinedProductSchema, productSchema } from './schemas/productSchema.ts';
+import { combinedUserSchema, userSchema, idSchema } from './schemas/userSchema.ts';
 import * as z from "zod"
 
 //basic types without ID
+
+export type ZodNumber = z.ZodNumber
 export type UserSchema = z.infer<typeof userSchema>
-export type ProductSchema = z.infer<typeof productIdSchema>
+export type ProductSchema = z.infer<typeof productSchema>
 export type CartSchema = z.infer<typeof cartSchema>
 
 //id schema types
-export type UserIdSchema = z.infer<typeof userIdSchema>
-export type ProductIdSchema = z.infer<typeof productIdSchema>
+export type IdSchema = z.infer<typeof idSchema>
+
 
 //both ID and content
 export type CombinedProductSchema = z.infer<typeof combinedProductSchema>
