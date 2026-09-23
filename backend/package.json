@@ -12,8 +12,10 @@
     "cool": "npm run build && npm run start"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "@project/shared": "file:../shared"
+    "@aws-sdk/client-dynamodb": "^3.1138.0",
+    "@aws-sdk/lib-dynamodb": "^3.1138.0",
+    "@project/shared": "file:../shared",
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
