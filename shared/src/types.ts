@@ -1,26 +1,22 @@
-export type Product = {
-  name: string;
-  price: number;
-  image: string;
-  amountInStock: number;
-};
+import type { cartSchema } from './schemas/cartSchema.ts';
+import type { combinedProductsArraySchema, combinedProductSchema, productIdSchema } from './schemas/productSchema.ts';
+import type { combinedUserSchema, userIdSchema, userSchema } from './schemas/userSchema.ts';
+import * as z from "zod"
 
-export type ProductSend = {
-  name: string;
-  price: number;
-  image: string;
-};
+//basic types without ID
+export type UserSchema = z.infer<typeof userSchema>
+export type ProductSchema = z.infer<typeof productIdSchema>
+export type CartSchema = z.infer<typeof cartSchema>
+
+//id schema types
+export type UserIdSchema = z.infer<typeof userIdSchema>
+export type ProductIdSchema = z.infer<typeof productIdSchema>
+
+//both ID and content
+export type CombinedProductSchema = z.infer<typeof combinedProductSchema>
+
+export type CombinedUserSchema = z.infer<typeof combinedUserSchema>
 
 
-export type Cart = {
-  userId: string
-  products: Product[]
-}
-
-
-
-export type CartItem = {
-  cartItemId: string;
-  productId: string;
-  amount: number;
-};
+//array validation for frontend
+export type CombinedProductsArraySchema = z.infer<typeof combinedProductsArraySchema>
