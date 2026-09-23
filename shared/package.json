@@ -1,0 +1,20 @@
+{
+  "name": "@project/shared",
+  "version": "1.0.0",
+  "description": "zod package",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [ ],
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "zod": "^4.5.4"
+  }
+}
