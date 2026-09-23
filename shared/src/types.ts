@@ -4,8 +4,6 @@ import { combinedUserSchema, userSchema, idSchema } from './schemas/userSchema.t
 import * as z from "zod"
 
 //basic types without ID
-
-export type ZodNumber = z.ZodNumber
 export type UserSchema = z.infer<typeof userSchema>
 export type ProductSchema = z.infer<typeof productSchema>
 export type CartSchema = z.infer<typeof cartSchema>
