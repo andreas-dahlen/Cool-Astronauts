@@ -5,15 +5,23 @@ import type { CombinedProductSchema, IdSchema, ProductIdParam, ProductSchema } f
 import { productIdParser } from '../middleware/idParsers.ts'
 import { jsonParser, productParser } from '../middleware/bodyParser.ts'
 import { generateId } from '../helpers/idGenerator.ts'
+import { QueryCommand } from '@aws-sdk/lib-dynamodb'
+import db, { tableName } from '../aws/aws.ts'
 
 const router: Router = express.Router()
 
-router.get<{}, CombinedProductSchema[]>('/', (_req, res): void => {
+router.get<{}, CombinedProductSchema[]>('/', async (_req, res): Promise<void> => {
+
+  // const result = await db.send(new QueryCommand({
+  //   TableName: tableName,
+  // }))
+
+
   res.status(200).send(products)
 })
 
 router.get<ProductIdParam, ProductSchema>('/:productId', productIdParser, (_req, res): void => {
-  const id = res.locals.userId
+  const id = res.locals.productId
   const product = products.find(prod => prod.productId === id)
 
   if (!product) {
@@ -49,7 +57,7 @@ router.put<ProductIdParam, void, ProductSchema>('/:productId', productIdParser, 
 
   products[productId] = { ...baseProduct, productId }
 
-  res.status(200)
+  res.sendStatus(200)
 })
 
 router.delete<ProductIdParam>('/:productId', productIdParser, (_req, res): void => {
