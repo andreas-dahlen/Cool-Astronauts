@@ -1,40 +1,41 @@
 import express, { type Router } from 'express'
 import { users } from '../data/users.ts'
 import { userIdParser } from '../middleware/idParsers.ts'
-import { userParser } from '../middleware/bodyParser.ts'
-import type { UserSchema } from '@project/shared'
+import { jsonParser, userParser } from '../middleware/bodyParser.ts'
+import type { UserSchema, UserIdParam, CombinedUserSchema, IdSchema } from '@project/shared'
+import { generateId } from '../helpers/idGenerator.ts'
 
 const router: Router = express.Router()
 
-router.get('/', (_req, res) => {
+router.get<{}, CombinedUserSchema[]>('/', (_req, res) => {
     res.status(200).json(users)
 })
 
-router.get('/:userId', userIdParser, (_req, res) => {
-    const userId = res.locals.userId
-    const user = users.find(user => user.userId === userId)
+router.get<UserIdParam, UserSchema>('/:userId', userIdParser, (_req, res): void => {
+  const userId: number = res.locals.userId
+  const user = users.find(user => user.userId === userId)
 
-    if (!user) {
-        res.sendStatus(404)
-        return
-    }
-    res.status(200).json(user)
+  if (!user) {
+    res.sendStatus(404)
+    return
+  }
+
+  const { userId: _userId, ...userWithoutId } = user
+  res.status(200).send(userWithoutId)
 })
 
-router.post('/', userParser, (req, res) => {
-    const body = req.body as UserSchema
-    const newUser = {
-        userId: users.length + 1,
-        name: body.name
-    }
+router.post<{}, IdSchema, UserSchema>('/', jsonParser, userParser, (req, res) => {
+    const user = req.body
+    const userId: number = generateId(users, `userId`)
+    const newUser: CombinedUserSchema = { ...user, userId }
 
     users.push(newUser)
-    res.status(201).json(newUser)
+    res.status(201).json(userId)
 })
 
-router.put('/:userId', userIdParser, userParser, (req, res) => {
+router.put<UserIdParam, void, UserSchema>('/:userId',jsonParser, userIdParser, userParser, (req, res): void => {
     const userId = res.locals.userId
-    const body = req.body as UserSchema
+    const body = req.body
     const user = users.find(user => user.userId === userId)
 
     if (!user) {
@@ -42,10 +43,11 @@ router.put('/:userId', userIdParser, userParser, (req, res) => {
         return
     }
     user.name = body.name
-    res.status(200).json(user)
+    users[userId] = { ...body, userId }
+        res.sendStatus(200)
 })
 
-router.delete('/:userId', userIdParser, (_req, res) => {
+router.delete<UserIdParam>('/:userId', userIdParser, (_req, res): void => {
     const userId = res.locals.userId
     const index = users.findIndex(user => user.userId === userId)
 

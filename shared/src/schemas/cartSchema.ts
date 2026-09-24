@@ -1,8 +1,8 @@
-import * as z from "zod"
-import { combinedProductSchema } from './productSchema.ts'
-import type { CartSchema } from '../types.ts'
+import * as z from 'zod'
+import { idSchema } from './userSchema.ts'
 
 export const cartSchema = z.object({
-  amount: z.number().int().min(0),
-  products: z.array(combinedProductSchema)
-})
+  userId: idSchema,
+  productIds: z.array(idSchema),
+  amount: z.number().int().min(1)
+}).strict()
