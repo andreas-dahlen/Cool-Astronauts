@@ -1,4 +1,5 @@
 import type { RequestHandler } from 'express'
+import express from 'express'
 import { cartSchema, productSchema, userSchema } from '@project/shared'
 
 
@@ -22,3 +23,5 @@ function createBodyParser<T>(
 export const productParser = createBodyParser(productSchema)
 export const userParser = createBodyParser(userSchema)
 export const cartParser = createBodyParser(cartSchema)
+
+export const jsonParser = express.json()

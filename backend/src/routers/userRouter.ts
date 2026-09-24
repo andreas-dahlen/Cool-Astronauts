@@ -6,11 +6,11 @@ import type { UserSchema } from '@project/shared'
 
 const router: Router = express.Router()
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
     res.status(200).json(users)
 })
 
-router.get('/:userId', userIdParser, (req, res) => {
+router.get('/:userId', userIdParser, (_req, res) => {
     const userId = res.locals.userId
     const user = users.find(user => user.userId === userId)
 
@@ -45,7 +45,7 @@ router.put('/:userId', userIdParser, userParser, (req, res) => {
     res.status(200).json(user)
 })
 
-router.delete('/:userId', userIdParser, (req, res) => {
+router.delete('/:userId', userIdParser, (_req, res) => {
     const userId = res.locals.userId
     const index = users.findIndex(user => user.userId === userId)
 
