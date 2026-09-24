@@ -1,4 +1,4 @@
-import type { cartSchema } from './schemas/cartSchema.ts';
+import type { cartSchema, cartsArraySchema } from './schemas/cartSchema.ts';
 import { combinedProductsArraySchema, combinedProductSchema, productSchema } from './schemas/productSchema.ts';
 import { combinedUserSchema, userSchema, idSchema } from './schemas/userSchema.ts';
 import * as z from "zod"
@@ -16,6 +16,7 @@ export type ProductIdParam = {
 export type UserSchema = z.infer<typeof userSchema>
 export type ProductSchema = z.infer<typeof productSchema>
 export type CartSchema = z.infer<typeof cartSchema>
+export type CartsArraySchema = z.infer<typeof cartsArraySchema>
 
 //ID
 export type IdSchema = z.infer<typeof idSchema>
