@@ -1,22 +1,21 @@
 import type { RequestHandler } from 'express'
-import { type ZodNumber, userIdSchema, productIdSchema } from '@project/shared'
+import { idSchema } from '@project/shared'
 
-const createIdParser = <Name extends string>(
-  name: Name,
-  schema: ZodNumber,
-): RequestHandler<Record<Name, string>> =>
-  (req, res, next): void => {
+function createIdParser<IdName extends string>(
+  idName: IdName): RequestHandler<Record<IdName, string>> {
+  return (req, res, next): void => {
     try {
-      res.locals[name] = schema.parse(
-        Number(req.params[name]),
+      res.locals[idName] = idSchema.parse(
+        req.params[idName]
       )
       next()
     } catch {
       res.sendStatus(400)
     }
   }
+}
 
-export const userIdParser = createIdParser("userId", userIdSchema)
-export const productIdParser = createIdParser("productId", productIdSchema)
+export const userIdParser = createIdParser("userId")
+export const productIdParser = createIdParser("productId")
 
 

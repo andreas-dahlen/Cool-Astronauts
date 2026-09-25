@@ -8,10 +8,12 @@
   "scripts": {
     "test": "vitest",
     "build": "tsc",
-    "start": "node --env-file=.env dist/server.js",
+    "start": "node --env-file=../.env dist/server.js",
     "cool": "npm run build && npm run start"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1139.0",
+    "@aws-sdk/lib-dynamodb": "^3.1139.0",
     "@project/shared": "file:../shared",
     "express": "^5.2.1"
   },

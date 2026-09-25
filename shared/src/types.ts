@@ -3,18 +3,25 @@ import { combinedProductsArraySchema, combinedProductSchema, productSchema } fro
 import { combinedUserSchema, userSchema, idSchema } from './schemas/userSchema.ts';
 import * as z from "zod"
 
-//basic types without ID
+//Route params
+export type UserIdParam = {
+  userId: string
+}
 
-export type ZodNumber = z.ZodNumber
+export type ProductIdParam = {
+  productId: string
+}
+
+//basic types without ID
 export type UserSchema = z.infer<typeof userSchema>
 export type ProductSchema = z.infer<typeof productSchema>
 export type CartSchema = z.infer<typeof cartSchema>
 
-//id schema types
+//ID
 export type IdSchema = z.infer<typeof idSchema>
 
 
-//both ID and content
+//Combined types
 export type CombinedProductSchema = z.infer<typeof combinedProductSchema>
 
 export type CombinedUserSchema = z.infer<typeof combinedUserSchema>
