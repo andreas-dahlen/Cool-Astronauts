@@ -6,8 +6,9 @@
   "type": "module",
   "main": "src/server.ts",
   "scripts": {
-    "test": "vitest",
-    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --env-file=../.env ./node_modules/vitest/vitest.mjs",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node --env-file=../.env dist/server.js",
     "cool": "npm run build && npm run start"
   },
@@ -15,6 +16,7 @@
     "@aws-sdk/client-dynamodb": "^3.1139.0",
     "@aws-sdk/lib-dynamodb": "^3.1139.0",
     "@project/shared": "file:../shared",
+    "@types/supertest": "^7.2.1",
     "express": "^5.2.1"
   },
   "devDependencies": {
