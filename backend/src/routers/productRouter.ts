@@ -25,6 +25,7 @@ router.get<{}, CombinedProductSchema[]>('/',
       const productData = combinedProductsArraySchema.safeParse(result.Items)
 
       if (productData.error) {
+        console.log(productData.error)
         res.sendStatus(500)
         return
       }
