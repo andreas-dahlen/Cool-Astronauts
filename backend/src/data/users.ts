@@ -10,4 +10,5 @@ export const users: CombinedUserSchema[] = [
     userId: randomUUID(),
     name: 'Sandulf'
   }
+  
 ]
