@@ -1,14 +1,12 @@
 import type { RequestHandler } from 'express'
 import { idSchema } from '@project/shared'
 
-function createIdParser<Name extends string>(
-  name: Name,
-  schema: typeof idSchema,
-): RequestHandler<Record<Name, string>> {
+function createIdParser<IdName extends string>(
+  idName: IdName): RequestHandler<Record<IdName, string>> {
   return (req, res, next): void => {
     try {
-      res.locals[name] = schema.parse(
-        Number(req.params[name]),
+      res.locals[idName] = idSchema.parse(
+        req.params[idName]
       )
       next()
     } catch {
@@ -17,7 +15,7 @@ function createIdParser<Name extends string>(
   }
 }
 
-export const userIdParser = createIdParser("userId", idSchema)
-export const productIdParser = createIdParser("productId", idSchema)
+export const userIdParser = createIdParser("userId")
+export const productIdParser = createIdParser("productId")
 
 
