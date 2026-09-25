@@ -1,6 +1,6 @@
 import * as z from "zod"
 
-export const idSchema = z.number().int().min(0)
+export const idSchema = z.uuid()
 
 export const userSchema = z.object({
   name: z.string(),

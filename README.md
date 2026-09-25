@@ -24,15 +24,29 @@ minst 20 produkter, 5 dokument i kundvagnen och 2 användare (json-format)
 
 FÖR BACKEND-UTVECKLARE!
 
-|     pk       |      sk        |   name   | price | image                | amountInStock |amount
+|     pk       |      sk        |   name   | price | image                  | amountInStock |amount
 |--------------|----------------|----------|       |
 | `USER#123`   |    `META`      |Karlsson  |  x    |
-| `USER#ID`    |`CARTPRODUCT#ID`|spaceship | 100   |https///bild.exempel.is| fsfsd |  34        |    1
+| `USER#ID`    |`CARTPRODUCT#ID`|spaceship | 100   |https:///bild.exempel.is| fsfsd         |  34        |    1
 
 
 | `PRODUCT#ID` |    `META`     |spaceship | 100   | fsfsd                   | 34
 | `PRODUCT#123`|    `META`     |anotherone| 100   | sdfsdfd                 | 23
 | ``
+
+
+|     pk       |      sk       |     name     |  amountInStock | amount | image | price | 
+|--------------|---------------|--------------|----------------|--------|-------|-------|
+|     USER	   |    USER#123   |   Karlsson   |       x        |   x    |   x   |   x   |		
+|     USER	   |    USER#789	 |     Anna	  	|       x        |   x    |   x   |   x   |		
+|--------------|---------------|--------------|----------------|--------|-------|-------|
+|    PRODUCT 	 |  PRODUCT#123	 |  spaceship	  |       5        |    x   |	https |  76   |
+|    PRODUCT 	 |  PRODUCT#789	 |  anotherone	|       8        |    x	  | https |  45   |
+|--------------|---------------|--------------|----------------|--------|-------|-------|
+|   USER#123   |  PRODUCT#123	 |      x       |       x        |    1   |   x   |   x   |
+|   USER#123   |  PRODUCT#789	 |	    x       |       x        |    3   |   x   |   x   |
+
+
 
 Ett user-objekt ska innehålla namn och userId.
 
@@ -80,6 +94,8 @@ Ett cart-objekt ska innehålla: userId, productId, amount
 
 
 //CART (CART):
+
+//api/cart/:userId, api/cart/:userId/product/:productId (GET, POST, PUT, DELETE)
 
 // [GET:userId] Frontenden skickar userId och får tillbaka alla produkter i cart
 // STATUS KODER: 200 okej, 204 no content

@@ -1,12 +1,13 @@
 import type { CombinedUserSchema } from '@project/shared'
+import { randomUUID } from 'node:crypto'
 
 export const users: CombinedUserSchema[] = [
   {
-    userId: 1,
+    userId: randomUUID(),
     name: 'Berit'
   },
   {
-    userId: 2,
+    userId: randomUUID(),
     name: 'Sandulf'
   }
   
