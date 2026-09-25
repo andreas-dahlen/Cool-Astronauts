@@ -1,29 +1,32 @@
 import type { CartSchema } from '@project/shared'
+import { products } from './products.ts'
+
+const ids = products.map(product => product.productId)
 
 export const cart: CartSchema[] = [
   {
     userId: 1,
-    productId: 1,
-    amount: 1
-  },
-  {
-    userId: 1,
-    productId: 2,
-    amount: 3
-  },
-  {
-    userId: 1,
-    productId: 3,
-    amount: 2
+    amount: 0,
+    productIds: []
   },
   {
     userId: 2,
-    productId: 4,
-    amount: 1
+    productIds: [],
+    amount: 0
   },
   {
-    userId: 2,
-    productId: 5,
-    amount: 2
+    userId: 3,
+    productIds: [],
+    amount: 0
+  },
+  {
+    userId: 4,
+    productIds: [],
+    amount: 0
+  },
+  {
+    userId: 5,
+    productIds: ids,
+    amount: products.length
   }
 ]

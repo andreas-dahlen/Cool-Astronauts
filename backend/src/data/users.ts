@@ -9,4 +9,5 @@ export const users: CombinedUserSchema[] = [
     userId: 2,
     name: 'Sandulf'
   }
+  
 ]
