@@ -1,112 +1,151 @@
 import express, { type Router } from 'express'
-import { products } from '../data/products.ts'
-
 import { combinedProductsArraySchema, combinedProductSchema, type CombinedProductSchema, type IdSchema, type ProductIdParam, type ProductSchema } from '@project/shared'
 import { productIdParser } from '../middleware/idParsers.ts'
 import { jsonParser, productParser } from '../middleware/bodyParser.ts'
-import { GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb'
+import { DeleteCommand, GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb'
 import db, { tableName } from '../aws/aws.ts'
 import { randomUUID, type UUID } from 'crypto'
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 
 const router: Router = express.Router()
 
-router.get<{}, CombinedProductSchema[]>('/', async (_req, res): Promise<void> => {
+router.get<{}, CombinedProductSchema[]>('/',
+  async (_, res): Promise<void> => {
 
-  const result = await db.send(new QueryCommand({
-    TableName: tableName,
-    KeyConditionExpression: 'pk = :type',
-    ExpressionAttributeValues: {
-      ':type': 'PRODUCT',
-    },
-    ScanIndexForward: true
-  }))
-  const productData = combinedProductsArraySchema.safeParse(result.Items)
+    try {
+      const result = await db.send(new QueryCommand({
+        TableName: tableName,
+        KeyConditionExpression: 'pk = :type',
+        ExpressionAttributeValues: {
+          ':type': 'PRODUCT',
+        },
+        ScanIndexForward: true,
+      }))
 
-  if (productData.error) {
-    res.sendStatus(500)
-    return
-  }
+      const productData = combinedProductsArraySchema.safeParse(result.Items)
 
-  res.status(200).send(productData.data)
-})
+      if (productData.error) {
+        res.sendStatus(500)
+        return
+      }
 
-router.get<ProductIdParam, ProductSchema | void>('/:productId', productIdParser, async (_req, res): Promise<void> => {
-  const id: UUID = res.locals.productId
-
-  const result = await db.send(new GetCommand({
-    TableName: tableName,
-    Key: {
-      pk: "PRODUCT",
-      sk: `PRODUCT#${id}`
+      res.status(200).send(productData.data)
+    } catch {
+      res.sendStatus(500)
     }
-  }))
+  })
 
-  if (!result.Item) {
-    res.sendStatus(404)
-    return
-  }
+router.get<ProductIdParam, ProductSchema | void>('/:productId',
+  productIdParser,
+  async (_, res): Promise<void> => {
+    const id: UUID = res.locals.productId
 
-  const validatedResult = combinedProductSchema.safeParse(result.Item)
+    try {
+      const result = await db.send(new GetCommand({
+        TableName: tableName,
+        Key: {
+          pk: 'PRODUCT',
+          sk: `PRODUCT#${id}`,
+        },
+      }))
 
-  if (validatedResult.error) {
-    res.sendStatus(500)
-    return
-  }
+      if (!result.Item) {
+        res.sendStatus(404)
+        return
+      }
 
-  const { productId, ...productWithoutId } = validatedResult.data
-  res.status(200).send(productWithoutId)
-})
+      const validatedResult = combinedProductSchema.safeParse(result.Item)
 
-router.post<{}, IdSchema, ProductSchema>('/', jsonParser, productParser, async (req, res): Promise<void> => {
-  const baseProduct = req.body
-  const productId: UUID = randomUUID()
+      if (validatedResult.error) {
+        res.sendStatus(500)
+        return
+      }
 
-  const item = {
-    pk: 'PRODUCT',
-    sk: `PRODUCT#${productId}`,
-    ...baseProduct
-  }
+      const { productId, ...productWithoutId } = validatedResult.data
+      res.status(200).send(productWithoutId)
+    } catch {
+      res.sendStatus(500)
+    }
+  })
 
-  try {
-    await db.send(new PutCommand({
-      TableName: tableName,
-      Item: item,
-      ConditionExpression: 'attribute_not_exists(pk)' //unique
-    }));
-    res.status(201).send(productId)
-  } catch {
-    res.sendStatus(500)
-  }
-})
+router.post<{}, IdSchema, ProductSchema>('/',
+  jsonParser, productParser,
+  async (req, res): Promise<void> => {
+    const baseProduct = req.body
+    const productId: UUID = randomUUID()
 
-router.put<ProductIdParam, void, ProductSchema>('/:productId', productIdParser, jsonParser, productParser, (req, res): void => {
-  const productId: UUID = res.locals.productId
+    const item = {
+      pk: 'PRODUCT',
+      sk: `PRODUCT#${productId}`,
+      ...baseProduct
+    }
 
+    try {
+      await db.send(new PutCommand({
+        TableName: tableName,
+        Item: item,
+        ConditionExpression: 'attribute_not_exists(pk)' //database overwrite protection
+      }));
+      res.status(201).send(productId)
+    } catch {
+      res.sendStatus(500)
+    }
+  })
 
+router.put<ProductIdParam, void, ProductSchema>('/:productId',
+  productIdParser, jsonParser, productParser,
+  async (req, res): Promise<void> => {
+    const productId: UUID = res.locals.productId
 
-  const oldProduct = products.find(prod => prod.productId === productId)
+    const baseProduct = req.body
 
-  if (!oldProduct) {
-    res.sendStatus(404)
-    return
-  }
-  const baseProduct = req.body
+    const item = {
+      pk: 'PRODUCT',
+      sk: `PRODUCT#${productId}`,
+      ...baseProduct
+    }
 
-  products[productId] = { ...baseProduct, productId }
+    try {
+      await db.send(new PutCommand({
+        TableName: tableName,
+        Item: item,
+        ConditionExpression: 'attribute_exists(pk)', //database don't create protection
+      }))
+      res.sendStatus(200)
+    } catch (error) {
+      if (error instanceof ConditionalCheckFailedException) {
+        res.sendStatus(404)
+        return
+      }
+      res.sendStatus(500)
+    }
+  })
 
-  res.sendStatus(200)
-})
+router.delete<ProductIdParam>('/:productId',
+  productIdParser,
+  async (_, res): Promise<void> => {
+    const productId: UUID = res.locals.productId
 
-router.delete<ProductIdParam>('/:productId', productIdParser, (_req, res): void => {
-  const productId: number = res.locals.productId
-  const index = products.findIndex(prod => prod.productId === productId)
+    try {
+      const result = await db.send(new DeleteCommand({
+        TableName: tableName,
+        Key: {
+          pk: 'PRODUCT',
+          sk: `PRODUCT#${productId}`,
+        },
+        ReturnValues: 'ALL_OLD',
+      }))
 
-  if (index === -1) {
-    res.sendStatus(404)
-    return
-  }
-  products.splice(index, 1)
-  res.sendStatus(204)
-})
+      if (!result.Attributes) {
+        res.sendStatus(404)
+        return
+      }
+
+      res.sendStatus(204)
+    } catch {
+      res.sendStatus(500)
+    }
+  },
+)
 
 export default router
