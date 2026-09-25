@@ -1,29 +1,30 @@
 import type { CartSchema } from '@project/shared'
+import { randomUUID } from 'node:crypto'
 
 export const cart: CartSchema[] = [
   {
-    userId: 1,
-    productId: 1,
+    userId: randomUUID(),
+    productIds: [randomUUID()],
     amount: 1
   },
   {
-    userId: 1,
-    productId: 2,
+    userId: randomUUID(),
+    productIds: [randomUUID(), randomUUID(), randomUUID()],
     amount: 3
   },
   {
-    userId: 1,
-    productId: 3,
+    userId: randomUUID(),
+    productIds: [randomUUID(), randomUUID()],
     amount: 2
   },
   {
-    userId: 2,
-    productId: 4,
+    userId: randomUUID(),
+    productIds: [randomUUID()],
     amount: 1
   },
   {
-    userId: 2,
-    productId: 5,
+    userId: randomUUID(),
+    productIds: [randomUUID(), randomUUID()],
     amount: 2
   }
 ]
