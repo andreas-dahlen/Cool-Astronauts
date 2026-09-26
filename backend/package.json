@@ -7,7 +7,7 @@
   "main": "src/server.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --env-file=../.env ./node_modules/vitest/vitest.mjs",
+    "test": "node --env-file=../.env ./node_modules/vitest/vitest.mjs --silent=passed-only",
     "build": "tsc -p tsconfig.build.json",
     "start": "node --env-file=../.env dist/server.js",
     "cool": "npm run build && npm run start"
