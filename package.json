@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "cd shared && npm run build && cd ../backend && npm run build",
+    "start": "cd shared && npm run build && cd ../backend && npm run cool",
+    "dev": "cd shared && npm run build && cd ../frontend && npm run dev",
+    "knip": "knip",
+    "test": "cd backend && npm run test"
+  },
+  "dependencies": {
+    "knip": "^6.38.0"
+  }
+}

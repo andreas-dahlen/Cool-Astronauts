@@ -7,7 +7,7 @@
   "scripts": {
     "test": "test",
     "build": "tsc",
-    "dev": "node dist"
+    "dev": "node dist/index.js"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
