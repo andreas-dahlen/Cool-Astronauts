@@ -1,4 +1,4 @@
-import { vi, expect, test, afterEach } from 'vitest'
+import { vi, expect, it, afterEach } from 'vitest'
 import request from 'supertest'
 import entry from '../../src/entry.ts'
 import db from '../../src/aws/aws.ts'
@@ -8,7 +8,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-test('GET /api/products', async () => {
+it('GET /api/products', async () => {
 
   const id = randomUUID()
 

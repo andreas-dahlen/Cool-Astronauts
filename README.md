@@ -35,10 +35,11 @@ FÖR BACKEND-UTVECKLARE!
 | ``
 
 
-|     pk       |      sk       |     name     |  amountInStock | amount | image | price | 
+
+|     pk       |      sk       |     name     |  amountInStock | amount | image | price |
 |--------------|---------------|--------------|----------------|--------|-------|-------|
-|     USER	   |    USER#123   |   Karlsson   |       x        |   x    |   x   |   x   |		
-|     USER	   |    USER#789	 |     Anna	  	|       x        |   x    |   x   |   x   |		
+|     USER	   |    USER#123   |   Karlsson   |       x        |   x    |   x   |   x   |
+|     USER	   |    USER#789	 |     Anna	  	|       x        |   x    |   x   |   x   |
 |--------------|---------------|--------------|----------------|--------|-------|-------|
 |    PRODUCT 	 |  PRODUCT#123	 |  spaceship	  |       5        |    x   |	https |  76   |
 |    PRODUCT 	 |  PRODUCT#789	 |  anotherone	|       8        |    x	  | https |  45   |
