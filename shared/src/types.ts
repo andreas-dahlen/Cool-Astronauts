@@ -1,6 +1,6 @@
-import type { cartSchema, combinedCartSchema } from './schemas/cartSchema.ts';
-import { combinedProductsArraySchema, combinedProductSchema, productSchema } from './schemas/productSchema.ts';
-import { combinedUserSchema, userSchema, idSchema } from './schemas/userSchema.ts';
+import type { cartSchema, combinedCartSchema, dbCartSchema } from './schemas/cartSchema.ts';
+import { combinedProductsArraySchema, combinedProductSchema, dbProductItemSchema, productSchema } from './schemas/productSchema.ts';
+import { combinedUserSchema, userSchema, idSchema, dbUserSchema } from './schemas/userSchema.ts';
 import * as z from "zod"
 
 //Route params
@@ -27,6 +27,21 @@ export type CombinedProductSchema = z.infer<typeof combinedProductSchema>
 export type CombinedUserSchema = z.infer<typeof combinedUserSchema>
 
 export type CombinedCartSchema = z.infer<typeof combinedCartSchema>
+
+
+//database types
+export type DbCartSchema = z.infer<typeof dbCartSchema>
+export type DbProductItemSchema = z.infer<typeof dbProductItemSchema>
+export type DbUserSchema = z.infer<typeof dbUserSchema>
+
+export type GeneratedDbSchema = (
+  | DbUserSchema
+  | DbProductItemSchema
+  | DbCartSchema
+)[]
+
+
+
 
 // Naming proposal — commented out for group discussion
 
