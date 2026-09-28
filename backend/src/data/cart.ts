@@ -1,8 +1,8 @@
-import type { CombinedCartSchema, IdSchema } from '@project/shared'
-import { randomUUID } from 'node:crypto'
+
+import type { CartWithId } from '@project/shared'
 import { products } from './products.ts'
 
-export const cart: CombinedCartSchema[] = [
+export const cart: CartWithId[] = [
   { productId: products[0]!.productId, amount: 1 },
   { productId: products[1]!.productId, amount: 3 },
   { productId: products[2]!.productId, amount: 2 },

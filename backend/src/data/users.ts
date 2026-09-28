@@ -1,6 +1,6 @@
-import type { CombinedUserSchema } from '@project/shared'
+import type { UserWithId } from '@project/shared'
 
-export const users: CombinedUserSchema[] = [
+export const users: UserWithId[] = [
   {
     userId: '64cf7cd9-839d-4fc3-9214-064c7c59346c',
     name: 'Berit'

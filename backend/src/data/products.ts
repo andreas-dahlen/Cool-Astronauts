@@ -1,7 +1,6 @@
-import type { CombinedProductSchema } from "@project/shared"
-import { randomUUID } from 'node:crypto'
+import type { ProductWithId } from "@project/shared"
 
-export const products: CombinedProductSchema[] = [
+export const products: ProductWithId[] = [
     {
         productId: 'f1bbd997-b062-40e2-9fe6-51c6535093f5',
         name: "Lunar Explorer Backpack",

@@ -17,10 +17,10 @@ export const dbCartSchema = cartSchema.extend({
   ]),
 }).strict()
 
-export const combinedCartSchema = cartSchema.extend({
+export const cartWithIdSchema = cartSchema.extend({
   productId: idSchema
 })
 
-export const combinedCartArraySchema = z.array(combinedCartSchema)
+export const cartWithIdArraySchema = z.array(cartWithIdSchema)
 export const dbCartArraySchema = z.array(dbCartSchema)
 
