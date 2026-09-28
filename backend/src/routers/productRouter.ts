@@ -1,15 +1,15 @@
 import express, { type Router } from 'express'
-import { dbProductItemsArraySchema, dbProductItemSchema, type CombinedProductSchema, type IdSchema, type ProductIdParam, type ProductSchema } from '@project/shared'
 import { productIdParser } from '../middleware/idParsers.ts'
 import { jsonParser, productParser } from '../middleware/bodyParser.ts'
 import { DeleteCommand, GetCommand, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb'
 import db, { tableName } from '../aws/aws.ts'
 import { randomUUID } from 'crypto'
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
+import { dbProductArraySchema, dbProductSchema, type Id, type Product, type ProductIdParam, type ProductWithId } from '@project/shared'
 
 const router: Router = express.Router()
 
-router.get<{}, CombinedProductSchema[]>('/',
+router.get<{}, ProductWithId[]>('/',
   async (_, res): Promise<void> => {
 
     try {
@@ -22,7 +22,7 @@ router.get<{}, CombinedProductSchema[]>('/',
         ScanIndexForward: true,
       }))
 
-      const productData = dbProductItemsArraySchema.safeParse(result.Items)
+      const productData = dbProductArraySchema.safeParse(result.Items)
 
       if (productData.error) {
         console.log(productData.error)
@@ -44,10 +44,10 @@ router.get<{}, CombinedProductSchema[]>('/',
     }
   })
 
-router.get<ProductIdParam, ProductSchema | void>('/:productId',
+router.get<ProductIdParam, Product | void>('/:productId',
   productIdParser,
   async (_, res): Promise<void> => {
-    const id: IdSchema = res.locals.productId
+    const id: Id = res.locals.productId
 
     try {
       const result = await db.send(new GetCommand({
@@ -63,7 +63,7 @@ router.get<ProductIdParam, ProductSchema | void>('/:productId',
         return
       }
 
-      const product = dbProductItemSchema.safeParse(result.Item)
+      const product = dbProductSchema.safeParse(result.Item)
 
       if (product.error) {
         res.sendStatus(500)
@@ -78,11 +78,11 @@ router.get<ProductIdParam, ProductSchema | void>('/:productId',
     }
   })
 
-router.post<{}, IdSchema, ProductSchema>('/',
+router.post<{}, Id, Product>('/',
   jsonParser, productParser,
   async (req, res): Promise<void> => {
     const baseProduct = req.body
-    const productId: IdSchema = randomUUID()
+    const productId: Id = randomUUID()
 
     const item = {
       pk: 'PRODUCT',
@@ -98,15 +98,15 @@ router.post<{}, IdSchema, ProductSchema>('/',
       }));
       res.status(201).send(productId)
     } catch (error) {
-        console.log(error) // TODO: felsökning
+      console.log(error) // TODO: felsökning
       res.sendStatus(500)
     }
   })
 
-router.put<ProductIdParam, void, ProductSchema>('/:productId',
+router.put<ProductIdParam, void, Product>('/:productId',
   productIdParser, jsonParser, productParser,
   async (req, res): Promise<void> => {
-    const productId: IdSchema = res.locals.productId
+    const productId: Id = res.locals.productId
 
     const baseProduct = req.body
 
@@ -135,7 +135,7 @@ router.put<ProductIdParam, void, ProductSchema>('/:productId',
 router.delete<ProductIdParam>('/:productId',
   productIdParser,
   async (_, res): Promise<void> => {
-    const productId: IdSchema = res.locals.productId
+    const productId: Id = res.locals.productId
 
     try {
       const result = await db.send(new DeleteCommand({

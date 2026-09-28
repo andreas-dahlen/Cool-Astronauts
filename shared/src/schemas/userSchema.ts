@@ -14,7 +14,7 @@ export const dbUserSchema = userSchema.extend({
   ]),
 }).strict()
 
-export const combinedUserSchema = userSchema.extend({
+export const UserWithIdSchema = userSchema.extend({
   userId: idSchema
 })
 

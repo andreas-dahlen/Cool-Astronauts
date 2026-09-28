@@ -8,13 +8,8 @@ import {
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 import db, { tableName } from '../aws/aws.ts'
 import { productIdParser, userIdParser } from '../middleware/idParsers.ts'
-import {
-  dbCartArraySchema,
-  combinedCartArraySchema,
-  dbCartSchema,
-  type CartSchema
-} from '@project/shared'
 import { cartParser, jsonParser } from '../middleware/bodyParser.ts'
+import { cartWithIdArraySchema, dbCartArraySchema, dbCartSchema, type Cart } from '@project/shared'
 
 // Skapar routern för alla cart-endpoints
 const router: Router = express.Router()
@@ -53,7 +48,7 @@ router.get('/:userId',
       }))
 
       // Kontrollerar att datan har rätt format innan den skickas
-      const parsedResponse = combinedCartArraySchema.parse(cart)
+      const parsedResponse = cartWithIdArraySchema.parse(cart)
 
       // Skickar hela kundvagnen
       res.status(200).json(parsedResponse)
@@ -118,7 +113,8 @@ router.get('/:userId/product/:productId',
 
 
 // POST - lägger till en produkt i en users kundvagn
-router.post<{}, string, CartSchema>('/:userId/product/:productId',
+//ANDREAS: Skall man ha eller inte ha UserIdParam och ProductIdParam?
+router.post<{}, string, Cart>('/:userId/product/:productId',
   userIdParser,
   productIdParser,
   jsonParser,
@@ -126,7 +122,7 @@ router.post<{}, string, CartSchema>('/:userId/product/:productId',
   async (req, res): Promise<void> => {
     const userId = res.locals.userId
     const productId = res.locals.productId
-    const cart: CartSchema = req.body
+    const cart: Cart = req.body
 
     // Bygger itemet i det format som används i DynamoDB
     const item = {
@@ -164,7 +160,7 @@ router.post<{}, string, CartSchema>('/:userId/product/:productId',
 
 
 // PUT - ändrar amount på en produkt som redan finns i kundvagnen
-router.put<{}, string, CartSchema>('/:userId/product/:productId',
+router.put<{}, string, Cart>('/:userId/product/:productId',
   userIdParser,
   productIdParser,
   jsonParser,
@@ -172,7 +168,7 @@ router.put<{}, string, CartSchema>('/:userId/product/:productId',
   async (req, res): Promise<void> => {
     const userId = res.locals.userId
     const productId = res.locals.productId
-    const cart: CartSchema = req.body
+    const cart: Cart = req.body
 
     try {
 

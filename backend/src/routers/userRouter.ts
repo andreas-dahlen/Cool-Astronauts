@@ -1,7 +1,7 @@
 import express, { type Router } from 'express'
 import { randomUUID } from 'node:crypto'
 
-import type { UserSchema, UserIdParam, CombinedUserSchema, IdSchema } from '@project/shared'
+import type { User, UserIdParam, UserWithId, Id } from '@project/shared'
 
 import { GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 
@@ -15,7 +15,7 @@ const router: Router = express.Router()
 
 
 //   ALLA UISERS
-router.get<{}, CombinedUserSchema[]>(
+router.get<{}, UserWithId[]>(
     '/',
     async (_req, res): Promise<void> => {
         try {
@@ -27,7 +27,7 @@ router.get<{}, CombinedUserSchema[]>(
                 }
             }))
 
-            const users: CombinedUserSchema[] = (result.Items ?? []).map(item => ({
+            const users: UserWithId[] = (result.Items ?? []).map(item => ({
                 userId: item.sk.replace('USER#', ''),
                 name: item.name
             }))
@@ -42,12 +42,12 @@ router.get<{}, CombinedUserSchema[]>(
 
 
 // EN SÄRKSILD USER
-router.get<UserIdParam, UserSchema>(
+router.get<UserIdParam, User>(
     '/:userId',
     userIdParser,
     async (_req, res): Promise<void> => {
         const userId = res.locals.userId
-        
+
         try {
             const result = await db.send(new GetCommand({
                 TableName: tableName,
@@ -62,7 +62,7 @@ router.get<UserIdParam, UserSchema>(
                 return
             }
 
-            const user: UserSchema = {
+            const user: User = {
                 name: result.Item.name
             }
             res.status(200).send(user)
@@ -75,7 +75,7 @@ router.get<UserIdParam, UserSchema>(
 )
 
 
-router.post<{}, IdSchema, UserSchema>(
+router.post<{}, Id, User>(
     '/',
     jsonParser,
     userParser,
@@ -104,7 +104,7 @@ router.post<{}, IdSchema, UserSchema>(
 )
 
 
-router.put<UserIdParam, void, UserSchema>(
+router.put<UserIdParam, void, User>(
     '/:userId',
     userIdParser,
     jsonParser,
