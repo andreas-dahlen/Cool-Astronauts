@@ -97,7 +97,8 @@ router.post<{}, IdSchema, ProductSchema>('/',
         ConditionExpression: 'attribute_not_exists(pk)' //database overwrite protection
       }));
       res.status(201).send(productId)
-    } catch {
+    } catch (error) {
+        console.log(error) // TODO: felsökning
       res.sendStatus(500)
     }
   })
