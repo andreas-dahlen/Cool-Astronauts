@@ -2,7 +2,7 @@
 import * as z from "zod"
 import type { dbUserSchema, idSchema, userSchema, UserWithIdSchema } from './schemas/userSchema.ts'
 import type { dbProductSchema, productSchema, productWithIdSchema } from './schemas/productSchema.ts'
-import type { cartSchema, cartWithIdSchema, dbCartSchema } from './schemas/cartSchema.ts'
+import { cartSchema, cartWithIdSchema, dbCartSchema } from './schemas/cartSchema.ts'
 
 //Route params
 export type UserIdParam = {

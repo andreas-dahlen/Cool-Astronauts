@@ -1,5 +1,6 @@
 import express, { type Router } from 'express'
 import {
+  DeleteCommand,
   GetCommand,
   PutCommand,
   QueryCommand,
@@ -113,7 +114,8 @@ router.get('/:userId/product/:productId',
 
 
 // POST - lägger till en produkt i en users kundvagn
-//ANDREAS: Skall man ha eller inte ha UserIdParam och ProductIdParam?
+//ANDREAS: Skall man ha eller inte ha UserIdParam och ProductIdParam? 
+// /svar; UserId och ProductIdParam behövs inte med hur route är skriven eftersom ID:n redan hanteras och valideras av middleware och sedan hämtas från res.locals
 router.post<{}, string, Cart>('/:userId/product/:productId',
   userIdParser,
   productIdParser,
