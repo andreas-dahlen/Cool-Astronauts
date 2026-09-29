@@ -30,6 +30,7 @@ router.get<{}, UserWithId[]>(
             const users: UserWithId[] = (result.Items ?? []).map(item => ({
                 userId: item.sk.replace('USER#', ''),
                 name: item.name
+                //returnera resten så om man lägger till mer..
             }))
             res.status(200).send(users)
 
@@ -65,6 +66,12 @@ router.get<UserIdParam, User>(
             const user: User = {
                 name: result.Item.name
             }
+
+            //andreas förslag.. 
+            // const {pk, sk, ...rest} = result.item
+            //
+            // res.status(200).send(rest)
+
             res.status(200).send(user)
 
         } catch (error) {
@@ -93,6 +100,8 @@ router.post<{}, Id, User>(
             await db.send(new PutCommand({
                 TableName: tableName,
                 Item: item
+                // andreas förslag. ConditionExpression: 'attribute_not_exists(pk)' // prevent overwriting a missing item
+
             }))
             res.status(201).send(userId)
 

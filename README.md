@@ -24,17 +24,6 @@ minst 20 produkter, 5 dokument i kundvagnen och 2 användare (json-format)
 
 FÖR BACKEND-UTVECKLARE!
 
-|     pk       |      sk        |   name   | price | image                  | amountInStock |amount
-|--------------|----------------|----------|       |
-| `USER#123`   |    `META`      |Karlsson  |  x    |
-| `USER#ID`    |`CARTPRODUCT#ID`|spaceship | 100   |https:///bild.exempel.is| fsfsd         |  34        |    1
-
-
-| `PRODUCT#ID` |    `META`     |spaceship | 100   | fsfsd                   | 34
-| `PRODUCT#123`|    `META`     |anotherone| 100   | sdfsdfd                 | 23
-| ``
-
-
 
 |     pk       |      sk       |     name     |  amountInStock | amount | image | price |
 |--------------|---------------|--------------|----------------|--------|-------|-------|
@@ -68,7 +57,7 @@ Ett cart-objekt ska innehålla: userId, productId, amount
 // [GET:userId] Frontenden skickar userId(url parameter) och får tillbaka namn (object!?)
 // STATUS KODER: 200 okej, 404 not found
 
-// [POST:namn] Frontenden skickar namn(request body??) och får tillbaka userId
+// [POST] Frontenden skickar namn(request body??) och får tillbaka userId
 // STATUS KODER: 201 created, 400 bad request
 
 // [PUT:userId] Frontenden skickar userId och nytt namn (object!?)
@@ -79,10 +68,10 @@ Ett cart-objekt ska innehålla: userId, productId, amount
 
 //PRODUCKT (PRODUCT):
 
-// [GET] Frontenden skickar INGET och får tillbaka alla produkter
+// [GET] Frontenden skickar INGET och får tillbaka alla produkter med IDn
 // STATUS KODER: 200 okej
 
-// [GET:productId] Frontenden skickar productId och får tillbaka en produkt
+// [GET:productId] Frontenden skickar productId och får tillbaka en produkt utan ID
 // STATUS KODER: 200 okej, 404 not found
 
 // [POST: body: product] Frontenden skickar namn och får tillbaka productId
@@ -117,37 +106,3 @@ Ett cart-objekt ska innehålla: userId, productId, amount
 
 // api/RESET [DELETE] Frontenden skickar INGET och får tillbaka INGET!
 // STATUS KODER: 205 reset content,
-
-//FRONTEND FÅR TYPER!
-
-//id är number
-//namn är string
-
-  export type Product = {
-    name: string;
-    price: number;
-    image: string;
-    amountInStock: number;
-  };
-
-//FRONTEND SKICKAR TYPER!
-  export type ProductSend = {
-    name: string;
-    price: number;
-    image: string;
-  };
-
-
-export type Cart = {
-  userId: string
-  products: Product[]
-}
-
-
-
-export type CartItem = {
-  cartItemId: string;
-  productId: string;
-  amount: number;
-};
-```

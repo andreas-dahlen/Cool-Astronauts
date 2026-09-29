@@ -1,5 +1,4 @@
 import express, { type Router } from 'express'
-import { users } from '../data/users.ts'
 import db, { tableName } from '../aws/aws.ts'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { getDbData } from '../data/generateDbData.ts'
