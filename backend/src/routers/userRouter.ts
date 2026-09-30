@@ -1,10 +1,9 @@
 import express, { type Router } from 'express'
 import { randomUUID } from 'node:crypto'
 
-import type { User, UserIdParam, UserWithId, Id } from '@project/shared'
+import { type User, type UserIdParam, type UserWithId, type Id, type DbUser } from '@project/shared'
 
 import { GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
-
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 
 import { userIdParser } from '../middleware/idParsers.ts'
@@ -27,11 +26,15 @@ router.get<{}, UserWithId[] | void>(
                 }
             }))
 
-            const users: UserWithId[] = (result.Items ?? []).map(item => ({
-                userId: item.sk.replace('USER#', ''),
-                name: item.name
-                //returnera resten så om man lägger till mer..
-            }))
+            const users: UserWithId[] = (result.Items ?? []).map(item => {
+                const dbUser = item as DbUser
+                const { pk, sk, ...user } = dbUser
+
+                return {
+                    userId: sk.replace('USER#', ''),
+                    ...user
+                }
+            })
             res.status(200).send(users)
 
         } catch (error) {
@@ -63,14 +66,8 @@ router.get<UserIdParam, User>(
                 return
             }
 
-            const user: User = {
-                name: result.Item.name
-            }
-
-            //andreas förslag.. 
-            // const {pk, sk, ...rest} = result.item
-            //
-            // res.status(200).send(rest)
+            const dbUser = result.Item as DbUser
+            const { pk, sk, ...user } = dbUser
 
             res.status(200).send(user)
 
@@ -81,7 +78,6 @@ router.get<UserIdParam, User>(
     }
 )
 
-
 router.post<{}, Id, User>(
     '/',
     jsonParser,
@@ -90,7 +86,7 @@ router.post<{}, Id, User>(
         const baseUser = req.body
         const userId = randomUUID()
 
-        const item = { //lägg till type
+        const item: DbUser = { //lägg till type
             pk: 'USER',
             sk: `USER#${userId}`,
             ...baseUser
@@ -99,9 +95,8 @@ router.post<{}, Id, User>(
         try {
             await db.send(new PutCommand({
                 TableName: tableName,
-                Item: item
-                // andreas förslag. ConditionExpression: 'attribute_not_exists(pk)' // prevent overwriting an existing item
-
+                Item: item,
+                ConditionExpression: 'attribute_note_exists(pk)'
             }))
             res.status(201).send(userId)
 
