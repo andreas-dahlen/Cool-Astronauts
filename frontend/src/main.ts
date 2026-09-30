@@ -1,12 +1,10 @@
 import { getProducts } from './api/products.ts'
 
+const basePath = "http://localhost:3001/api/"
+
 async function start(): Promise<void> {
-  try {
-    const products = await getProducts()
-    console.log(products)
-  } catch (error) {
-    console.error(error)
-  }
+  const products = await getProducts(basePath)
+  console.log(products)
 }
 
 start()

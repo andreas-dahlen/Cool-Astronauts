@@ -5,8 +5,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+    // "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -42,8 +42,8 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-    
-  },
 
-  "exclude": ["**/test"]
+  },
+  "include": [ "src" ],
+  "exclude": [ "**/test" ]
 }

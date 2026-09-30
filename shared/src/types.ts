@@ -13,6 +13,11 @@ export type ProductIdParam = {
   productId: string
 }
 
+export type DoubleIdParam = {
+  productId: string
+  userId: string
+}
+
 //basic types without ID
 export type User = z.infer<typeof userSchema>
 export type Product = z.infer<typeof productSchema>

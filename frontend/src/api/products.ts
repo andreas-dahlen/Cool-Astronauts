@@ -1,11 +1,16 @@
-import type { ProductWithId } from '@project/shared'
+import { productsWithIdArraySchema, productWithIdSchema, type ProductWithId } from '@project/shared'
 
-export async function getProducts(): Promise<ProductWithId[]> {
-    const response = await fetch('http://localhost:3001/api/products')
 
-    if (!response.ok) {
+
+export async function getProducts(basePath: string): Promise<ProductWithId[]> {
+
+    try {
+        const response = await fetch(`${basePath}products`)
+        const rawData = await response.json()
+
+        return productsWithIdArraySchema.parse(rawData)
+
+    } catch (error) {
         throw new Error('Could not fetch products')
     }
-
-    return await response.json()
 }

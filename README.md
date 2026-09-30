@@ -1,14 +1,11 @@
 
 
 
-enpoints:
-
-
-http methods:
+enpoints && http methods:
 
 
 request exempel:
-
+något exempel på request body, url param, query param etc.
 
 retur data struktur:
 
