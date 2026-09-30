@@ -18,9 +18,11 @@
     "@aws-sdk/lib-dynamodb": "^3.1139.0",
     "@project/shared": "file:../shared",
     "@types/supertest": "^7.2.1",
+    "cors": "^2.8.6",
     "express": "^5.2.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.2",
     "supertest": "^7.3.0",
