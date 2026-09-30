@@ -1,4 +1,4 @@
-import { productsWithIdArraySchema, productWithIdSchema, type ProductWithId } from '@project/shared'
+import { productsWithIdArraySchema, type ProductWithId } from '@project/shared'
 
 
 

@@ -1,4 +1,5 @@
 import express, { type Express } from 'express'
+import cors from 'cors'
 import { logger } from './middleware/logger.ts'
 import productRouter from './routers/productRouter.ts'
 import userRouter from './routers/userRouter.ts'
@@ -8,7 +9,9 @@ import resetRouter from './routers/resetRouter.ts'
 const entry: Express = express()
 const apiRouter = express.Router()
 
+entry.use(cors())
 entry.use(logger)
+
 entry.use('/api', apiRouter)
 
 apiRouter.use('/products', productRouter)
