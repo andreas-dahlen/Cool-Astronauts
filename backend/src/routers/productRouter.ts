@@ -120,7 +120,7 @@ router.put<ProductIdParam, void, Product>('/:productId',
       await db.send(new PutCommand({
         TableName: tableName,
         Item: item,
-        ConditionExpression: 'attribute_exists(pk)', //database don't create protection
+        ConditionExpression: 'attribute_exists(pk)', // prevent creating a missing item
       }))
       res.sendStatus(200)
     } catch (error) {

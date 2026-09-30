@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "frontend part",
   "type": "module",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "test",
-    "build": "tsc",
-    "dev": "node dist/index.js"
+    "build": "tsc && cp src/html/* dist",
+    "dev": "node dist/main.js",
+    "type": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
