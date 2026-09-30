@@ -10,17 +10,17 @@ import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 import db, { tableName } from '../aws/aws.ts'
 import { productIdParser, userIdParser } from '../middleware/idParsers.ts'
 import { cartParser, jsonParser } from '../middleware/bodyParser.ts'
-import { cartWithIdArraySchema, dbCartArraySchema, dbCartSchema, type Cart } from '@project/shared'
+import { cartWithIdArraySchema, dbCartArraySchema, dbCartSchema, type Cart, type CartWithId } from '@project/shared'
 
 // Skapar routern för alla cart-endpoints
 const router: Router = express.Router()
 
 
 // GET - hämtar hela kundvagnen för en user
-router.get('/:userId',
+router.get('/:userId',  //TODO: skanar typer
   userIdParser,
   async (_req, res): Promise<void> => {
-    const userId = res.locals.userId
+    const userId = res.locals.userId //TODO: typinformationen går inte vidare
 
     try {
 
@@ -43,12 +43,12 @@ router.get('/:userId',
       }
 
       // Gör om DynamoDB-formatet till formatet som API:t ska returnera
-      const cart = cartData.data.map(item => ({
+      const cart: CartWithId[] = cartData.data.map(item => ({
         productId: item.sk.replace('PRODUCT#', ''),
         amount: item.amount
       }))
 
-      // Kontrollerar att datan har rätt format innan den skickas
+      // Kontrollerar att datan har rätt format innan den skickas TODO: tänk igen, man behöver inte parca data man själv skickat in
       const parsedResponse = cartWithIdArraySchema.parse(cart)
 
       // Skickar hela kundvagnen
@@ -102,7 +102,7 @@ router.get('/:userId/product/:productId',
         amount: cartData.data.amount
       }
 
-      // Skickar cart-itemet
+      // Skickar cart-itemet. kan använda send ist för json
       res.status(200).json(cartItem)
 
     } catch (error) {
@@ -115,7 +115,7 @@ router.get('/:userId/product/:productId',
 
 // POST - lägger till en produkt i en users kundvagn
 //ANDREAS: Skall man ha eller inte ha UserIdParam och ProductIdParam? 
-// /svar; UserId och ProductIdParam behövs inte med hur route är skriven eftersom ID:n redan hanteras och valideras av middleware och sedan hämtas från res.locals
+// /svar; behöver vara med, göra en typ IDx2
 router.post<{}, string, Cart>('/:userId/product/:productId',
   userIdParser,
   productIdParser,
@@ -126,7 +126,7 @@ router.post<{}, string, Cart>('/:userId/product/:productId',
     const productId = res.locals.productId
     const cart: Cart = req.body
 
-    // Bygger itemet i det format som används i DynamoDB
+    // Bygger itemet i det format som används i DynamoDB. TODO: använd data typ. dubbel
     const item = {
       pk: `USER#${userId}`,
       sk: `PRODUCT#${productId}`,
@@ -149,7 +149,7 @@ router.post<{}, string, Cart>('/:userId/product/:productId',
 
       // Produkten finns redan i kundvagnen
       if (error instanceof ConditionalCheckFailedException) {
-        res.sendStatus(409)
+        res.sendStatus(400)
         return
       }
 
@@ -204,6 +204,44 @@ router.put<{}, string, Cart>('/:userId/product/:productId',
       res.sendStatus(500)
     }
   }
+)
+
+// DELETE - tar bort en produkt från en users kundvagn
+router.delete('/:userId/product/:productId',
+  userIdParser,
+  productIdParser,
+  async (_, res): Promise<void> => {
+    const userId = res.locals.userId
+    const productId = res.locals.productId
+
+    try {
+
+      // Hittar och tar bort produkten från userns kundvagn
+      const result = await db.send(new DeleteCommand({
+        TableName: tableName,
+        Key: {
+          pk: `USER#${userId}`,
+          sk: `PRODUCT#${productId}`,
+        },
+        // Returnerar produkten som fanns innan den togs bort
+        ReturnValues: 'ALL_OLD',
+      }))
+
+      // Produkten fanns inte i kundvagnen
+      if (!result.Attributes) {
+        res.sendStatus(404)
+        return
+      }
+
+      // Produkten togs bort
+      res.sendStatus(204)
+
+    } catch {
+
+      // Något oväntat gick fel
+      res.sendStatus(500)
+    }
+  },
 )
 
 
