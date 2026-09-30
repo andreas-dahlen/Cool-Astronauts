@@ -25,7 +25,6 @@ router.get<{}, ProductWithId[]>('/',
       const productData = dbProductArraySchema.safeParse(result.Items)
 
       if (productData.error) {
-        console.log(productData.error)
         res.sendStatus(500)
         return
       }
@@ -98,7 +97,6 @@ router.post<{}, Id, Product>('/',
       }));
       res.status(201).send(productId)
     } catch (error) {
-      console.log(error) // TODO: felsökning
       res.sendStatus(500)
     }
   })
@@ -122,7 +120,7 @@ router.put<ProductIdParam, void, Product>('/:productId',
         Item: item,
         ConditionExpression: 'attribute_exists(pk)', // prevent creating a missing item
       }))
-      res.sendStatus(200)
+      res.status(200).send()
     } catch (error) {
       if (error instanceof ConditionalCheckFailedException) {
         res.sendStatus(404)

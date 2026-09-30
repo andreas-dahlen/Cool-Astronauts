@@ -1,8 +1,10 @@
 import { getProducts } from './api/products.ts'
 
+const baseUrl = 'http://localhost:3001/api/'
+
 async function start(): Promise<void> {
     try {
-        const products = await getProducts('http://localhost:3001/api/')
+        const products = await getProducts(baseUrl)
         const productContainer = document.querySelector('#products')
 
         if (!productContainer) {
@@ -21,6 +23,8 @@ async function start(): Promise<void> {
             `
             productContainer.append(productCard)
         })
+
+        //TODO show all information from database
 
     } catch (error) {
         console.error(error)

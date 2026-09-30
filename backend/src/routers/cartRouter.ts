@@ -3,8 +3,7 @@ import {
   DeleteCommand,
   GetCommand,
   PutCommand,
-  QueryCommand,
-  UpdateCommand
+  QueryCommand
 } from '@aws-sdk/lib-dynamodb'
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 import db, { tableName } from '../aws/aws.ts'
@@ -20,10 +19,11 @@ import {
   type Id,
   type DbCart
 } from '@project/shared'
+import { randomUUID } from 'node:crypto'
 
 const router: Router = express.Router()
 
-router.get<UserIdParam, CartWithId[]>('/:userId',
+router.get<UserIdParam, CartWithId[] | void>('/:userId',
   userIdParser,
   async (_req, res): Promise<void> => {
     const userId: Id = res.locals.userId
@@ -41,7 +41,6 @@ router.get<UserIdParam, CartWithId[]>('/:userId',
       const cartData = dbCartArraySchema.safeParse(result.Items)
 
       if (cartData.error) {
-        console.log(cartData.error)
         res.sendStatus(500)
         return
       }
@@ -54,7 +53,6 @@ router.get<UserIdParam, CartWithId[]>('/:userId',
       res.status(200).send(cart)
 
     } catch (error) {
-      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -87,7 +85,6 @@ router.get<DoubleIdParam, CartWithId | void>(
       const cartData = dbCartSchema.safeParse(result.Item)
 
       if (cartData.error) {
-        console.log(cartData.error)
         res.sendStatus(500)
         return
       }
@@ -100,7 +97,6 @@ router.get<DoubleIdParam, CartWithId | void>(
       res.status(200).send(cartItem)
 
     } catch (error) {
-      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -108,15 +104,14 @@ router.get<DoubleIdParam, CartWithId | void>(
 
 
 router.post<DoubleIdParam, Id, Cart>(
-  '/:userId/product/:productId',
+  '/:userId',
   userIdParser,
-  productIdParser,
   jsonParser,
   cartParser,
   async (req, res): Promise<void> => {
     const userId: Id = res.locals.userId
-    const productId: Id = res.locals.productId
-    const cart: Cart = req.body
+    const productId: Id = randomUUID()
+    const cart = req.body
 
     const item: DbCart = {
       pk: `USER#${userId}`,
@@ -141,7 +136,6 @@ router.post<DoubleIdParam, Id, Cart>(
         return
       }
 
-      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -157,24 +151,23 @@ router.put<DoubleIdParam, void, Cart>(
   async (req, res): Promise<void> => {
     const userId: Id = res.locals.userId
     const productId: Id = res.locals.productId
-    const cart: Cart = req.body
+    const cart = req.body
+
+    const item = {
+      pk: `USER#${userId}`,
+      sk: `PRODUCT#${productId}`,
+      ...cart
+    }
 
     try {
 
-      await db.send(new UpdateCommand({
+      await db.send(new PutCommand({
         TableName: tableName,
-        Key: {
-          pk: `USER#${userId}`,
-          sk: `PRODUCT#${productId}`
-        },
-        UpdateExpression: 'SET amount = :amount',
+        Item: item,
         ConditionExpression: 'attribute_exists(pk)',
-        ExpressionAttributeValues: {
-          ':amount': cart.amount
-        }
       }))
 
-      res.sendStatus(200)
+      res.status(200).send()
 
     } catch (error) {
 
@@ -183,7 +176,6 @@ router.put<DoubleIdParam, void, Cart>(
         return
       }
 
-      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -213,7 +205,7 @@ router.delete<DoubleIdParam>('/:userId/product/:productId',
         return
       }
 
-      res.sendStatus(204)
+      res.status(204).send()
 
     } catch {
 
