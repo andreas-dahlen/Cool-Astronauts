@@ -1,7 +1,7 @@
 import express, { type Router } from 'express'
 import { randomUUID } from 'node:crypto'
 
-import { type User, type UserIdParam, type UserWithId, type Id, type DbUser } from '@project/shared'
+import { type User, type UserIdParam, type UserWithId, type Id, type DbUser, dbUserSchema, dbProductArraySchema } from '@project/shared'
 
 import { GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
@@ -26,9 +26,10 @@ router.get<{}, UserWithId[] | void>(
                 }
             }))
 
-            const users: UserWithId[] = (result.Items ?? []).map(item => {
-                const dbUser = item as DbUser
-                const { pk, sk, ...user } = dbUser
+            const dbUsers = dbProductArraySchema.parse(result.Items)
+
+            const users: UserWithId[] = dbUsers.map(item => {
+                const { pk, sk, ...user } = item
 
                 return {
                     userId: sk.replace('USER#', ''),
@@ -38,7 +39,6 @@ router.get<{}, UserWithId[] | void>(
             res.status(200).send(users)
 
         } catch (error) {
-            console.error(error)
             res.sendStatus(500)
         }
     }
@@ -66,13 +66,12 @@ router.get<UserIdParam, User>(
                 return
             }
 
-            const dbUser = result.Item as DbUser
+            const dbUser = dbUserSchema.parse(result.Item)
             const { pk, sk, ...user } = dbUser
 
             res.status(200).send(user)
 
         } catch (error) {
-            console.error(error)
             res.sendStatus(500)
         }
     }
@@ -86,7 +85,7 @@ router.post<{}, Id, User>(
         const baseUser = req.body
         const userId = randomUUID()
 
-        const item: DbUser = { 
+        const item: DbUser = {
             pk: 'USER',
             sk: `USER#${userId}`,
             ...baseUser
@@ -101,7 +100,6 @@ router.post<{}, Id, User>(
             res.status(201).send(userId)
 
         } catch (error) {
-            console.error(error)
             res.sendStatus(500)
         }
     }
@@ -146,7 +144,6 @@ router.put<UserIdParam, void, User>(
                 return
             }
 
-            console.error(error)
             res.sendStatus(500)
         }
     }
@@ -178,7 +175,6 @@ router.delete<UserIdParam>(
                 return
             }
 
-            console.error(error)
             res.sendStatus(500)
         }
     }
