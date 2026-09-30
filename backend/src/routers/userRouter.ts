@@ -86,7 +86,7 @@ router.post<{}, Id, User>(
         const baseUser = req.body
         const userId = randomUUID()
 
-        const item: DbUser = { //lägg till type
+        const item: DbUser = { 
             pk: 'USER',
             sk: `USER#${userId}`,
             ...baseUser
