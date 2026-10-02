@@ -44,6 +44,6 @@
     "skipLibCheck": true
 
   },
-  "include": [ "src" ],
+  "include": [ "src", "views/productView.ts" ],
   "exclude": [ "**/test" ]
 }
