@@ -9,15 +9,19 @@ export async function cartView(
 ): Promise<void> {
 
   const cart = await getCart(baseUrl, user.userId)
-  const productContainer = document.querySelector('#cart')
+  const cartContainer = document.querySelector('#content')
 
-  if (!productContainer) {
-    throw new Error('Product container not found')
+  if (!cartContainer) {
+    throw new Error('Cart container not found')
   }
 
   for (const cartItem of cart) {
     const product = products.find(prod => prod.productId === cartItem.productId)
-    const productCard = document.createElement('article')
+
+    if (!product) {
+      throw new Error("no product found")
+    }
+    const cartCard = document.createElement('article')
     const image = document.createElement('img')
     image.src = product.image
     image.alt = product.name
@@ -38,15 +42,13 @@ export async function cartView(
       console.log('Product ID:', product.productId)
     })
 
-    productCard.append(
+    cartCard.append(
       image,
       name,
       price,
       stock,
       button
     )
-    productContainer.append(productCard)
-
-
+    cartContainer.append(cartCard)
   }
 }
