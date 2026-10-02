@@ -1,14 +1,14 @@
 import type { ProductWithId } from '@project/shared'
 
 export function productView(products: ProductWithId[]): void {
-    const productContainer = document.querySelector('#products')
+    const productContainer = document.querySelector('#content')
 
     if (!productContainer) {
         throw new Error('Product container not found')
     }
 
     products.forEach(product => {
-        const productCard = document.createElement('content')
+        const productCard = document.createElement('article')
         const image = document.createElement('img')
         image.src = product.image
         image.alt = product.name
