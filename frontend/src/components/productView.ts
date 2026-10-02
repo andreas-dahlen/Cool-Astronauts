@@ -8,7 +8,7 @@ export function productView(products: ProductWithId[]): void {
     }
 
     products.forEach(product => {
-        const productCard = document.createElement('article')
+        const productCard = document.createElement('content')
         const image = document.createElement('img')
         image.src = product.image
         image.alt = product.name
@@ -26,7 +26,7 @@ export function productView(products: ProductWithId[]): void {
         button.textContent = 'Köp'
 
         button.addEventListener('click', () => {
-            console.log('Product ID:, product.productId')
+            console.log('product.productId')
         })
 
         productCard.append(
