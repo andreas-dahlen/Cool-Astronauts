@@ -1,17 +1,17 @@
 import { header } from './components/header.ts'
-
-const baseUrl = 'http://localhost:3001/api/'
-
 import { getUser } from './api/users.ts'
 import { getProducts } from './api/products.ts'
 import { productView } from './components/productView.ts'
 import { cartView } from './components/cartView.ts'
 import { welcomeView } from './components/welcomeView.ts'
 
-export type Views = "products" | "cart" | null
+const baseUrl = 'http://localhost:3001/api/'
+export type Views = "products" | "cart" | "home"
 export async function start() {
 
-    let views: Views = null
+    let views: Views = "home"
+
+    // const response = await fetch(`${baseUrl}RESET`, { method: "PUT" })
 
     const [products, user] = await Promise.all([
         getProducts(baseUrl),
@@ -21,6 +21,14 @@ export async function start() {
     const changeView = async (view: Views) => {
         views = view
 
+        const content = document.querySelector("#content")
+
+        if (!content) throw new Error("content target not found")
+
+        content?.replaceChildren()
+
+        update(views)
+
         if (views === 'products') {
             productView(products)
         }
@@ -29,12 +37,14 @@ export async function start() {
             await cartView(user, products, baseUrl)
         }
 
-        if (views === null) {
+        if (views === "home") {
             welcomeView()
         }
     }
 
-    header(user, changeView)
+    const update = header(user, changeView)
+
+    await changeView("home")
 }
 
 start()

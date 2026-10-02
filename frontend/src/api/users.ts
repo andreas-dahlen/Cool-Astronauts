@@ -6,8 +6,8 @@ export async function getUser(basePath: string): Promise<UserWithId> {
 
   try {
     const response = await fetch(`${basePath}users`)
+    console.log(response.status, response.url)
     const rawData = await response.json()
-
     const data = UserWithIdArraySchema.parse(rawData)
 
     const user = data.find(userData => userData.name === "Berit")

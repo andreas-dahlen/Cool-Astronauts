@@ -9,6 +9,7 @@ export function welcomeView() {
   }
 
   const welcome = document.createElement('h1')
-
+  welcome.textContent = "welcome!"
   welcomeContainer.append(welcome)
+
 }

@@ -12,6 +12,5 @@ export const cart: CartWithId[] = [
   { productId: products[6]!.productId, amount: 2 },
   { productId: products[7]!.productId, amount: 12 },
   { productId: products[8]!.productId, amount: 5 },
-  { productId: products[9]!.productId, amount: 2 },
-  { productId: products[10]!.productId, amount: 16 },
+  { productId: products[9]!.productId, amount: 2 }
 ]

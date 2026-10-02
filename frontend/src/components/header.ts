@@ -1,6 +1,6 @@
 import type { UserWithId } from '@project/shared'
 import type { Views } from '../main.ts'
-export function header(user: UserWithId, changeView: (view: Views) => void): void {
+export function header(user: UserWithId, changeView: (view: Views) => void): (view: Views) => void {
 
   const headerContainer = document.querySelector('#header')
 
@@ -15,6 +15,7 @@ export function header(user: UserWithId, changeView: (view: Views) => void): voi
   const name = document.createElement('h2')
   name.textContent = `${user.name}`
 
+  const currentView = document.createElement('h3')
 
   const nav = document.createElement('nav')
 
@@ -34,7 +35,7 @@ export function header(user: UserWithId, changeView: (view: Views) => void): voi
   })
 
   homeButton.addEventListener('click', () => {
-    changeView(null)
+    changeView("home")
   })
 
   nav.append(
@@ -46,4 +47,9 @@ export function header(user: UserWithId, changeView: (view: Views) => void): voi
   headerContainer.append(h1)
   headerContainer.append(name)
   headerContainer.append(nav)
+  headerContainer.append(currentView)
+
+  return (view: Views) => {
+    currentView.textContent = view ?? "home"
+  }
 }
