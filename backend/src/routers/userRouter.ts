@@ -1,7 +1,7 @@
 import express, { type Router } from 'express'
 import { randomUUID } from 'node:crypto'
 
-import { type User, type UserIdParam, type UserWithId, type Id, type DbUser, dbUserSchema, dbProductArraySchema } from '@project/shared'
+import { type User, type UserIdParam, type UserWithId, type Id, type DbUser, dbUserSchema, dbUserArraySchema } from '@project/shared'
 
 import { GetCommand, QueryCommand, PutCommand, UpdateCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
@@ -26,7 +26,7 @@ router.get<{}, UserWithId[] | void>(
                 }
             }))
 
-            const dbUsers = dbProductArraySchema.parse(result.Items)
+            const dbUsers = dbUserArraySchema.parse(result.Items)
 
             const users: UserWithId[] = dbUsers.map(item => {
                 const { pk, sk, ...user } = item

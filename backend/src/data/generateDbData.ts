@@ -10,7 +10,7 @@ export function getDbData(): GeneratedDbData {
     pk: 'USER',
     sk: `USER#${user.userId}`,
     name: user.name,
-  })) satisfies DbUser[]
+  })) satisfies DbUser[] //2
   const productItems = products.map(prod => {
     const { productId, ...rest } = prod
     return {
@@ -18,13 +18,13 @@ export function getDbData(): GeneratedDbData {
       sk: `PRODUCT#${prod.productId}`,
       ...rest
     }
-  }) satisfies DbProduct[]
+  }) satisfies DbProduct[] //20
 
   const cartItems = cart.map((item, index) => ({
     pk: `USER#${userIds[index % userIds.length]}`,
     sk: `PRODUCT#${item.productId}`,
     amount: item.amount,
-  })) satisfies DbCart[]
+  })) satisfies DbCart[] //10
   return [
     ...userItems,
     ...productItems,
