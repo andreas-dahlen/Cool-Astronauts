@@ -8,8 +8,19 @@ export const productSchema = z.object({
   amountInStock: z.number().int().min(0)
 }).strict()
 
-export const combinedProductSchema = productSchema.extend({
+export const dbProductSchema = productSchema.extend({
+  pk: z.literal('PRODUCT'),
+  sk: z.templateLiteral([
+    z.literal('PRODUCT#'),
+    idSchema,
+  ]),
+}).strict()
+
+export const dbProductArraySchema = z.array(dbProductSchema)
+
+
+export const productWithIdSchema = productSchema.extend({
   productId: idSchema
 })
 
-export const combinedProductsArraySchema = z.array(combinedProductSchema)
+export const productsWithIdArraySchema = z.array(productWithIdSchema)

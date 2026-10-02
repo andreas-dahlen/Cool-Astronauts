@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "description": "frontend part",
   "type": "module",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "test",
-    "build": "tsc",
-    "dev": "node dist/index.js"
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "type": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^26.6.2",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1"
+  },
+  "dependencies": {
+    "@project/shared": "file:../shared"
   }
 }

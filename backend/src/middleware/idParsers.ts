@@ -2,7 +2,7 @@ import type { RequestHandler } from 'express'
 import { idSchema } from '@project/shared'
 
 function createIdParser<IdName extends string>(
-  idName: IdName): RequestHandler<Record<IdName, string>> {
+  idName: IdName): RequestHandler {
   return (req, res, next): void => {
     try {
       res.locals[idName] = idSchema.parse(

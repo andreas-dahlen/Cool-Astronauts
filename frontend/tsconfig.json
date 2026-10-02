@@ -5,6 +5,9 @@
     "rootDir": "./src",
     "outDir": "./dist",
 
+    // "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
@@ -23,8 +26,6 @@
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "allowImportingTsExtensions": true,
-
     // Style Options
     // "noImplicitReturns": true,
     // "noImplicitOverride": true,
@@ -40,8 +41,9 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
 
-    "exclude": [ "**/test" ]
-  }
+  },
+  "include": [ "src" ],
+  "exclude": [ "**/test" ]
 }

@@ -1,12 +1,29 @@
 import express, { type Router } from 'express'
-import { users } from '../data/users.ts'
+import db, { tableName } from '../aws/aws.ts'
+import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
+import { getDbData } from '../data/generateDbData.ts'
 
 const router: Router = express.Router()
 
-router.delete('/', (_req, res) => {
-  //
+router.put('/', async (_req, res) => {
+  const data = getDbData()
 
-  res.status(205)
+  try {
+
+    for (let i = 0; i < data.length; i += 25) {
+      const batch = data.slice(i, i + 25)
+      await db.send(new BatchWriteCommand({
+        RequestItems: {
+          [tableName]: batch.map(Item => ({
+            PutRequest: { Item }
+          }))
+        }, //check settings for batchWrite -> put request
+      }))
+    }
+    res.sendStatus(205)
+  } catch {
+    res.sendStatus(500)
+  }
 })
 
 export default router
