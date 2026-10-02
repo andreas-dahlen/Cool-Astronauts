@@ -1,8 +1,8 @@
-import { getProducts } from '../src/api/products.ts'
+import { getProducts } from '../api/products.ts'
 
 const baseUrl = 'http://localhost:3001/api/'
 
-async function start(): Promise<void> {
+export async function productView(): Promise<void> {
     try {
         const products = await getProducts(baseUrl)
         const productContainer = document.querySelector('#products')

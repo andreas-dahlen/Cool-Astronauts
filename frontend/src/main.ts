@@ -4,6 +4,7 @@ const baseUrl = 'http://localhost:3001/api/'
 
 import { getUser } from './api/users.ts'
 import { getProducts } from './api/products.ts'
+import { productView } from './components/productView.ts'
 
 type Views = "products" | "cart" | null
 export async function start() {
@@ -18,12 +19,13 @@ export async function start() {
     header()
 
     if (views === "products") {
-        // productView(products)
+
+        productView(products)
         views = "products"
     }
 
     if (views === "cart") {
-        // await cartView(user, products, baseUrl)
+        await cartView(user, products, baseUrl)
         views = "cart"
     }
 
