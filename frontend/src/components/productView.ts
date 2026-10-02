@@ -25,6 +25,10 @@ export function productView(products: ProductWithId[]): void {
         const button = document.createElement('button')
         button.textContent = 'Köp'
 
+        button.addEventListener('click', () => {
+            console.log('Product ID:, product.productId')
+        })
+
         productCard.append(
             image,
             name,
