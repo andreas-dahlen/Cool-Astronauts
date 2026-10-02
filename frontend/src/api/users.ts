@@ -19,6 +19,6 @@ export async function getUser(basePath: string): Promise<UserWithId> {
     return user
 
   } catch (error) {
-    throw new Error('Could not fetch products')
+    throw new Error('Could not fetch users')
   }
 }
