@@ -1,33 +1,35 @@
-import { getProducts } from './api/products.ts'
+import { header } from './components/header.ts'
 
 const baseUrl = 'http://localhost:3001/api/'
 
-async function start(): Promise<void> {
-    try {
-        const products = await getProducts(baseUrl)
-        const productContainer = document.querySelector('#products')
+import { getUser } from './api/users.ts'
+import { getProducts } from './api/products.ts'
 
-        if (!productContainer) {
-            throw new Error('Product container not found')
-        }
+type Views = "products" | "cart" | null
+export async function start() {
 
-        products.forEach(product => {
-            const productCard = document.createElement('article')
+    let views: Views = null
 
-            productCard.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <h2>${product.name}</h2>
-                <p>${product.price} kr</p>
-                <p>I lager: ${product.amountInStock}</p>
-                <button>Köp</button>
-            `
-            productContainer.append(productCard)
-        })
+    const [products, user] = await Promise.all([
+        getProducts(baseUrl),
+        getUser(baseUrl)
+    ])
 
-        //TODO show all information from database
+    header()
 
-    } catch (error) {
-        console.error(error)
+    if (views === "products") {
+        // productView(products)
+        views = "products"
+    }
+
+    if (views === "cart") {
+        // await cartView(user, products, baseUrl)
+        views = "cart"
+    }
+
+    if (views === null) {
+        //welcomeView()
+        views = null
     }
 }
 

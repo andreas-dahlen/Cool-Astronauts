@@ -18,3 +18,5 @@ export const UserWithIdSchema = userSchema.extend({
   userId: idSchema
 })
 
+export const UserWithIdArraySchema = z.array(UserWithIdSchema)
+
