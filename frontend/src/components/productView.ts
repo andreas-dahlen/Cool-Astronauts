@@ -1,7 +1,7 @@
 import type { ProductWithId } from '@project/shared'
 
 export function productView(products: ProductWithId[]): void {
-    const productContainer = document.querySelector('#products')
+    const productContainer = document.querySelector('#content')
 
     if (!productContainer) {
         throw new Error('Product container not found')
@@ -24,6 +24,10 @@ export function productView(products: ProductWithId[]): void {
 
         const button = document.createElement('button')
         button.textContent = 'Köp'
+
+        button.addEventListener('click', () => {
+            console.log('product.productId')
+        })
 
         productCard.append(
             image,
