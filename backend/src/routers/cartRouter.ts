@@ -104,13 +104,14 @@ router.get<DoubleIdParam, CartWithId | void>(
 
 
 router.post<DoubleIdParam, Id, Cart>(
-  '/:userId',
+  '/:userId/product/:productId',
   userIdParser,
+  productIdParser,
   jsonParser,
   cartParser,
   async (req, res): Promise<void> => {
     const userId: Id = res.locals.userId
-    const productId: Id = randomUUID()
+    const productId: Id = res.locals.productId
     const cart = req.body
 
     const item: DbCart = {
