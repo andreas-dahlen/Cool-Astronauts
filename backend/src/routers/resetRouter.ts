@@ -5,7 +5,7 @@ import { getDbData } from '../data/generateDbData.ts'
 
 const router: Router = express.Router()
 
-router.put('/', async (_req, res) => {
+router.put('/', async (_req, res) => {      //återställer till ett bestämt startläge
   const data = getDbData()
 
   try {
