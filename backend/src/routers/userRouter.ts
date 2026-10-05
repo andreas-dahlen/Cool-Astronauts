@@ -95,7 +95,7 @@ router.post<{}, Id, User>(
             await db.send(new PutCommand({
                 TableName: tableName,
                 Item: item,
-                ConditionExpression: 'attribute_note_exists(pk)'
+                ConditionExpression: 'attribute_not_exists(pk)'
             }))
             res.status(201).send(userId)
 
