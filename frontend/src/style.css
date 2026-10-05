@@ -1,0 +1,72 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #222;
+}
+
+header {
+    background-color: #222;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+#products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+#products article {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+#products img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+#products h2 {
+    font-size: 18px;
+}
+
+button {
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    background-color: #222;
+    color: white;
+    margin-bottom: 1em;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#cart {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+}

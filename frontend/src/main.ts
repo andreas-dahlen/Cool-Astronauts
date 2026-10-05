@@ -4,6 +4,7 @@ import { getProducts } from './api/products.ts'
 import { productView } from './components/productView.ts'
 import { cartView } from './components/cartView.ts'
 import { welcomeView } from './components/welcomeView.ts'
+import './style.css'
 
 const baseUrl = 'http://localhost:3001/api/'
 export type Views = "products" | "cart" | "home"
